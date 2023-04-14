@@ -20,7 +20,6 @@ class Game:
         self.won = False
 
     # Create the 4x4 game board
-
     def create_board(self):
         board = []
         for i in range(4):
@@ -125,3 +124,24 @@ if __name__ == '__main__':
 
     # Print the game board
     game.print_board()
+
+    # Print the state of board cells in a matrix with W for wumpus, P for pit, G for gold, S for stench, B for breeze
+    for i in range(4):
+        for j in range(4):
+            cell_State = game.board[i][j].get_cell_properties()
+
+            if cell_State['has_wumpus']:
+                print('W ', end='')
+            elif cell_State['has_pit']:
+                print('P ', end='')
+            elif cell_State['has_gold']:
+                print('G ', end='')
+            elif cell_State['has_stench']:
+                print('S ', end='')
+            elif cell_State['has_breeze']:
+                print('B ', end='')
+            else:
+                print('E ', end='')
+        print()
+
+    # Print the state of the sensors
