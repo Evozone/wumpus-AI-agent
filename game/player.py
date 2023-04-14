@@ -17,3 +17,21 @@ class Player:
 
     def get_y(self):
         return self.y
+
+    def get_has_arrow(self):
+        return self.has_arrow
+
+    def get_has_gold(self):
+        return self.has_gold
+
+    def get_alive(self):
+        return self.alive
+
+    def get_score(self):
+        return self.score
+
+    def set_x(self, x):
+        self.x = x
+
+    def set_y(self, y):
+        self.y = y
