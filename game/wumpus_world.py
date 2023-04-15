@@ -11,11 +11,11 @@ def getUserInput():
     while True:
         try:
             action = input("Enter your move: ")
-            if action not in ["w", "a", "s", "d", "x", " ", "q"]:
+            if action not in ["w", "a", "s", "d", " ", "q"]:
                 raise ValueError
             return action
         except ValueError:
-            print("Invalid input. Please enter 'w', 'a', 's', 'd','x' or ' '.")
+            print("Invalid input. Please enter 'w', 'a', 's', 'd' or ' '.")
 
 
 # Main function

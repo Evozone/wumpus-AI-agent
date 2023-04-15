@@ -41,8 +41,8 @@ class Cell:
     def set_breeze(self):
         self.has_breeze = True
 
-    def set_stench(self):
-        self.has_stench = True
+    def set_stench(self, stench):
+        self.has_stench = stench
 
     def set_glitter(self):
         self.has_glitter = True

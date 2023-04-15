@@ -44,13 +44,13 @@ class Game:
 
         # Set the stench sensor to true for all adjacent cells
         if x > 0:
-            self.board[x - 1][y].set_stench()
+            self.board[x - 1][y].set_stench(True)
         if x < 3:
-            self.board[x + 1][y].set_stench()
+            self.board[x + 1][y].set_stench(True)
         if y > 0:
-            self.board[x][y - 1].set_stench()
+            self.board[x][y - 1].set_stench(True)
         if y < 3:
-            self.board[x][y + 1].set_stench()
+            self.board[x][y + 1].set_stench(True)
         print("Wumpus is at: " + str(x) + ", " + str(y))
 
     # Set the pit locations
@@ -160,7 +160,7 @@ class Game:
             else:
                 self.player.set_y(self.player.get_y() + 1)
                 self.sensors['bump'] = False
-        elif action == 'x':
+        elif action == ' ':
             hasArrow = self.player.get_has_arrow()
             self.player.set_score(self.player.get_score() + 1)
             if (hasArrow):
