@@ -9,6 +9,7 @@ class Cell:
         self.has_gold = False
         self.has_breeze = False
         self.has_stench = False
+        self.has_glitter = False
 
     def __repr__(self):
         return f"Cell(x={self.x}, y={self.y}, has_wumpus={self.has_wumpus}, has_pit={self.has_pit}, has_gold={self.has_gold})"
@@ -22,10 +23,11 @@ class Cell:
             "has_gold": self.has_gold,
             "has_breeze": self.has_breeze,
             "has_stench": self.has_stench,
+            "has_glitter": self.has_glitter,
         }
 
-    def set_wumpus(self):
-        self.has_wumpus = True
+    def set_wumpus(self, wumpus):
+        self.has_wumpus = wumpus
 
     def set_pit(self):
         self.has_pit = True
@@ -41,6 +43,9 @@ class Cell:
 
     def set_stench(self):
         self.has_stench = True
+
+    def set_glitter(self):
+        self.has_glitter = True
 
     def get_pit(self):
         return self.has_pit

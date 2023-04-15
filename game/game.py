@@ -40,7 +40,7 @@ class Game:
             x = random.randint(0, 3)
             y = random.randint(0, 3)
 
-        self.board[x][y].set_wumpus()
+        self.board[x][y].set_wumpus(True)
 
         # Set the stench sensor to true for all adjacent cells
         if x > 0:
@@ -51,6 +51,7 @@ class Game:
             self.board[x][y - 1].set_stench()
         if y < 3:
             self.board[x][y + 1].set_stench()
+        print("Wumpus is at: " + str(x) + ", " + str(y))
 
     # Set the pit locations
     def set_pits(self):
@@ -65,6 +66,7 @@ class Game:
                 y = random.randint(0, 3)
 
             self.board[x][y].set_pit()
+            print("Pit is at: " + str(x) + ", " + str(y))
 
             # Set the breeze sensor to true for all adjacent cells
             if x > 0:
@@ -88,6 +90,16 @@ class Game:
             y = random.randint(0, 3)
 
         self.board[x][y].set_gold()
+        if x > 0:
+            self.board[x - 1][y].set_glitter()
+        if x < 3:
+            self.board[x + 1][y].set_glitter()
+        if y > 0:
+            self.board[x][y - 1].set_glitter()
+        if y < 3:
+            self.board[x][y + 1].set_glitter()
+
+        print("Gold is at: " + str(x) + ", " + str(y))
 
     # Set the initial state of the game board
     def set_initial_state(self):
@@ -148,9 +160,84 @@ class Game:
             else:
                 self.player.set_y(self.player.get_y() + 1)
                 self.sensors['bump'] = False
+        elif action == 'x':
+            hasArrow = self.player.get_has_arrow()
+            self.player.set_score(self.player.get_score() + 1)
+            if (hasArrow):
+                self.player.set_has_arrow(False)
+                print("Give me a direction to shoot in (w,a,s,d):")
+                direction = input()
+                if direction == 'w':
+                    if (self.player.get_x() != 0 and self.board[self.player.get_x()-1][self.player.get_y()].get_wumpus()):
+                        self.sensors['scream'] = True
+                    else:
+                        print("You missed the wumpus!")
+                        self.sensors['scream'] = False
+                elif direction == 's':
+                    if (self.player.get_x() != 3 and self.board[self.player.get_x()+1][self.player.get_y()].get_wumpus()):
+                        self.sensors['scream'] = True
+                    else:
+                        print("You missed the wumpus!")
+                        self.sensors['scream'] = False
+                elif direction == 'a':
+                    if (self.player.get_y() != 0 and self.board[self.player.get_x()][self.player.get_y()-1].get_wumpus()):
+                        self.sensors['scream'] = True
+                    else:
+                        print("You missed the wumpus!")
+                        self.sensors['scream'] = False
+                elif direction == 'd':
+                    if (self.player.get_y() != 3 and self.board[self.player.get_x()][self.player.get_y()+1].get_wumpus()):
+                        self.sensors['scream'] = True
+                    else:
+                        print("You missed the wumpus!")
+                        self.sensors['scream'] = False
+
+                if self.sensors['scream']:
+                    self.player.set_score(self.player.get_score()+1000)
+                    print("You killed the wumpus!")
+                    # find and remove wumpus and stench around it
+                    for i in range(4):
+                        for j in range(4):
+                            if self.board[i][j].get_wumpus():
+                                self.board[i][j].set_wumpus(False)
+                                if i != 0:
+                                    self.board[i-1][j].set_stench(False)
+                                if i != 3:
+                                    self.board[i+1][j].set_stench(False)
+                                if j != 0:
+                                    self.board[i][j-1].set_stench(False)
+                                if j != 3:
+                                    self.board[i][j+1].set_stench(False)
+                                break
+
+            else:
+                print("You have no arrows left")
         # if action is q quit the game
         elif action == 'q':
             quit()
+
+        # if bump is false
+        if self.sensors['bump'] == False:
+            # if player is on gold
+            if self.board[self.player.get_x()][self.player.get_y()].get_cell_properties()['has_gold']:
+                # set score to score + 1000
+                self.player.set_score(self.player.get_score() + 1000)
+                self.game_over = True
+            elif self.board[self.player.get_x()][self.player.get_y()].get_cell_properties()['has_wumpus']:
+                self.player.set_score(self.player.get_score() - 1000)
+                self.game_over = True
+            elif self.board[self.player.get_x()][self.player.get_y()].get_cell_properties()['has_pit']:
+                self.player.set_score(self.player.get_score() - 1000)
+                self.game_over = True
+            else:
+                self.sensors['stench'] = self.board[self.player.get_x(
+                )][self.player.get_y()].get_cell_properties()['has_stench']
+                self.sensors['breeze'] = self.board[self.player.get_x(
+                )][self.player.get_y()].get_cell_properties()['has_breeze']
+                self.sensors['glitter'] = self.board[self.player.get_x(
+                )][self.player.get_y()].get_cell_properties()['has_glitter']
+        else:
+            self.player.set_score(self.player.get_score() + 1)
 
     def print_x(self):
         """Print the player's x coordinate."""

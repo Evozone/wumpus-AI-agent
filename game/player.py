@@ -21,6 +21,9 @@ class Player:
     def get_has_arrow(self):
         return self.has_arrow
 
+    def set_has_arrow(self, has_arrow):
+        self.has_arrow = has_arrow
+
     def get_has_gold(self):
         return self.has_gold
 
