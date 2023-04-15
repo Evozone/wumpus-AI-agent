@@ -7,11 +7,11 @@ import instructions
 
 
 # Get user input
-def getUsrInput():
+def getUserInput():
     while True:
         try:
             action = input("Enter your move: ")
-            if action not in ["W", "A", "S", "D", " "]:
+            if action not in ["w", "a", "s", "d", " ", "q"]:
                 raise ValueError
             return action
         except ValueError:
@@ -31,7 +31,7 @@ if __name__ == "__main__":
     while not game.game_over:
 
         # try catch to check valid input only pass w,a,s,d,spacebar
-        action = getUsrInput()
+        action = getUserInput()
 
         # Execute the player's move
         game.update_game_state(action)

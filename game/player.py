@@ -35,3 +35,6 @@ class Player:
 
     def set_y(self, y):
         self.y = y
+
+    def set_score(self, score):
+        self.score = score
