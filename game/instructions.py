@@ -18,7 +18,11 @@ def display_instructions():
     print(
         "- Try to find the gold ('G') without falling into pits ('P') or getting caught by the Wumpus ('W')."
     )
-    print("- Return to the starting point to win the game.")
+    print("- You can grab the gold ('G') by moving to the same square as the gold.")
+    print("- You can shoot the Wumpus ('W') by moving to the same square as the Wumpus.")
+    print("- You can shoot the Wumpus ('W') by shooting an arrow to the same column or row as the Wumpus.")
+
+    print("- Return to the starting point with the gold to win the game.")
     print('=' * 60)
     print("- Good luck!")
     print('=' * 60)
