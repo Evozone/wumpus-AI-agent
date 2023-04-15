@@ -167,6 +167,8 @@ class Game:
 
         # If the player is in 0, 0 with the gold, the game is over and the player wins
         if self.player.get_x() == 0 and self.player.get_y() == 0 and self.player.has_gold:
+            # Increase score by 1000
+            self.player.set_score(self.player.get_score() + 1000)
             self.game_over = True
             self.won = True
 
