@@ -10,7 +10,7 @@ class Player:
         self.score = 0
 
     def __repr__(self):
-        return f"Player(x={self.x}, y={self.y}, visited={self.visited}, has_wumpus={self.has_wumpus}, has_pit={self.has_pit}, has_gold={self.has_gold})"
+        return f"Player(x={self.x}, y={self.y}, has_arrow={self.has_arrow}, has_gold={self.has_gold}, alive={self.alive}, score={self.score})"
 
     def get_x(self):
         return self.x
@@ -29,6 +29,9 @@ class Player:
 
     def get_alive(self):
         return self.alive
+
+    def set_alive(self, alive):
+        self.alive = alive
 
     def get_score(self):
         return self.score

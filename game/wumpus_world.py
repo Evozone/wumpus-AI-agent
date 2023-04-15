@@ -1,7 +1,4 @@
-import random
 import os
-import cell
-import player
 import game
 import instructions
 
@@ -11,36 +8,46 @@ def getUserInput():
     while True:
         try:
             action = input("Enter your move: ")
-            if action not in ["w", "a", "s", "d", " ", "q"]:
+            if action not in ["w", "a", "s", "d", "x", "q", "g"]:
                 raise ValueError
             return action
         except ValueError:
-            print("Invalid input. Please enter 'w', 'a', 's', 'd' or ' '.")
+            print("Invalid input. Please enter 'w', 'a', 's', 'd', 'x', 'q', or 'g'.")
 
 
 # Main function
 if __name__ == "__main__":
     # Tell Instructions
     instructions.display_instructions()
-    # Create a new game
+
+    # Press enter to start the game
+    input("Press enter to start the game...")
+
+    os.system("cls" if os.name == "nt" else "clear")
+
+    # Create a new game and start it
     game = game.Game()
-    # Start the game
     game.start_game()
 
-    # While game is not over
     while not game.game_over:
 
-        # try catch to check valid input only pass w,a,s,d,spacebar
         action = getUserInput()
 
-        # Execute the player's move
         game.update_game_state(action)
 
-        # Clear the screen as per OS
         os.system("cls" if os.name == "nt" else "clear")
 
-        game.print_board()
+        game.game_loop()
 
-        game.print_score()
+    # If game over, won or lost?
+    if game.game_over:
+        if game.won:
+            print("Congratulations! You took the gold and escaped the cave alive!")
+            print('-' * 50)
+        else:
+            print("You died! Better luck next time!")
+            print('-' * 50)
 
-        game.print_sensors()
+        # Press enter to exit the game
+        input("Press enter to exit the game...")
+        os.system("cls" if os.name == "nt" else "clear")
