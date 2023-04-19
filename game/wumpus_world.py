@@ -8,7 +8,7 @@ def getUserInput():
     while True:
         try:
             action = input("Enter your move: ")
-            if action not in ["w", "a", "s", "d", "x", "q", "g"]:
+            if action not in ["w", "a", "s", "d", "xw", "xa", "xs", "xd", "q", "g"]:
                 raise ValueError
             return action
         except ValueError:

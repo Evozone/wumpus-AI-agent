@@ -1,8 +1,9 @@
 # Imports
-import cell
+import os
+import game.cell as cell
 import random
-import player
-import instructions
+import game.player as player
+import game.instructions as instructions
 
 
 # Class for Game state
@@ -151,7 +152,7 @@ class Game:
                 self.player.set_alive(False)
                 print("You were eaten by the Wumpus!")
 
-        elif action in ['g', 'q', 'x']:
+        elif action in ['g', 'q', 'xw', 'xa', 'xs', 'xd']:
             # Sensor for scream is updated inside interact
             self.interact(action)
 
@@ -219,19 +220,14 @@ class Game:
             # Quit the game
             self.game_over = True
 
-        elif action == 'x':
-            # Shoot the arrow if the player has the arrow
+        # Else if action starts with x, it is an arrow action
+        elif action[0] == 'x':
+            # Check if the player has an arrow
             if self.player.has_arrow:
                 self.player.has_arrow = False
-                # Ask for arrow direction with validation
-                arrow_direction = input(
-                    "Which direction do you want to shoot the arrow? (w, a, s, d): ")
-                while arrow_direction not in ['w', 'a', 's', 'd']:
-                    arrow_direction = input(
-                        "Invalid direction. Please enter w, a, s, or d: ")
-                self.shoot_arrow(arrow_direction)
+                self.shoot_arrow(action[1:])
             else:
-                print("You don't have the arrow!")
+                print("You don't have an arrow!")
 
     # Kill wumpus and remove stench
     def kill_wumpus(self, x, y):
@@ -268,6 +264,65 @@ class Game:
             for j in range(self.size):
                 self.kill_wumpus(arrow_travel, j)
 
+    # Functions for the AI agent
+    def get_fitness(self):
+        return self.player.score
+
+    def get_state(self):
+        # Convert sensors's dictionary to a list of true/false values
+        sensors = [self.sensors['breeze'], self.sensors['stench'], self.sensors['glitter'], self.sensors['bump'],
+                   self.sensors['scream']]
+
+        return self.player.score, sensors
+
+    def is_game_over(self):
+        return self.game_over
+
+    def is_won(self):
+        return self.won
+
+    def run_game_with_ai(self, ai_agent):
+        # Run the game until it is over
+        self.set_initial_state()
+
+        while not self.game_over:
+            # Get the current state of the game and pass it to the AI agent
+            state = self.get_state()
+
+            # Get the action from the AI agent
+            action = ai_agent.get_action(state, self.game_over)
+
+            # Update the game state
+            self.update_game_state(action)
+
+            # # Print the board
+            # self.print_board()
+
+            # # Print the action
+            # print('Action: ' + action)
+
+            # # Print the score
+            # self.print_score()
+
+            # # Print the sensors
+            # self.print_sensors()
+
+            # # Reset the sensors
+            # self.reset_sensors()
+
+            # # Clear the screen
+            # os.system('cls' if os.name == 'nt' else 'clear')
+
+        # Print the final score
+        self.print_score()
+
+        # Print the game over message
+        if self.won:
+            print('You won!')
+        else:
+            print('You lost!')
+
+    # Functions for the human player
     def print_score(self):
         print('Score: ' + str(self.player.get_score()))
 
