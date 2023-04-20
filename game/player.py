@@ -9,6 +9,7 @@ class Player:
         self.alive = True
         self.score = 1000
         self.num_moves = 0
+        self.dangerMatrix = [[0 for i in range(4)] for j in range(4)]
 
     def __repr__(self):
         return f"Player(x={self.x}, y={self.y}, has_arrow={self.has_arrow}, has_gold={self.has_gold}, alive={self.alive}, score={self.score})"

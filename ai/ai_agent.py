@@ -29,13 +29,20 @@ class MyAgent:
 
     def percept_to_inputs(self, game_state, game_over):
         # Get the game state as a list of inputs
-        score, sensors = game_state
+        score, sensors, playerX, playerY, playerGold, playerArrow, last_sensor, cave = game_state
+
+        # Map last sensor to a number
+        last_sensor_map = {None: 0, 'bump': 1, 'scream': 2}
+
+        last_sensor = last_sensor_map[last_sensor]
+
+        # Flatten cave (4x4) to a list of 16
+        cave = [c for row in cave for c in row]
 
         # Inputs are score is a number, sensors are boolean, game_over is boolean
         # Convert boolean sensors to 0 or 1 and score to float
         inputs = [float(game_over)] + [float(s)
-                                       for s in sensors] + [float(score)]
-
+                                       for s in sensors] + [float(score)] + [float(playerX)] + [float(playerY)] + [float(playerGold)] + [float(playerArrow)] + [float(last_sensor)] + [float(c) for c in cave]
         return inputs
 
     def output_to_action(self, output):

@@ -23,7 +23,7 @@ class Game:
         self.game_over = False
         self.won = False
         self.size = 4
-        self.was_last_sensor_bump = False
+        self.last_sensor = None
 
     # Create the 4x4 game board
     def create_board(self):
@@ -140,6 +140,15 @@ class Game:
 
     # Update game state using the action
     def update_game_state(self, action):
+
+        # Check current cell for wumpus and pit and update player danger matrix
+        if self.board[self.player.get_x()][self.player.get_y()].has_breeze:
+            self.player.dangerMatrix[self.player.get_x(
+            )][self.player.get_y()] = -1
+        if self.board[self.player.get_x()][self.player.get_y()].has_stench:
+            self.player.dangerMatrix[self.player.get_x(
+            )][self.player.get_y()] = 1
+
         # Determine if the action is a movement or interaction
         if action in ['w', 'a', 's', 'd']:
             # Sensor for bump is updated inside move_player
@@ -187,8 +196,8 @@ class Game:
             'd': (0, 1),
         }
 
-        # decrease score by 1
-        self.player.set_score(self.player.get_score() - 1)
+        # decrease score by 20
+        self.player.set_score(self.player.get_score() - 20)
 
         # Get the position change for the given action from the dictionary
         delta = action_to_delta.get(action)
@@ -203,21 +212,21 @@ class Game:
         # Check if the new position is out of bounds
         if new_x < 0 or new_x >= self.size or new_y < 0 or new_y >= self.size:
             # decrease score by amount of times bumped
-            if self.was_last_sensor_bump:
+            if self.last_sensor == 'bump':
                 self.player.set_score(
                     self.player.get_score() - 1000)
             else:
                 self.player.set_score(
                     self.player.get_score() - 50)
             self.sensors['bump'] = True
-            self.was_last_sensor_bump = True
+            self.last_sensor = 'bump'
             return
 
         # Move the player and update the sensors
         self.player.set_x(new_x)
         self.player.set_y(new_y)
 
-        self.was_last_sensor_bump = False
+        self.last_sensor = None
 
     # Interact with the environment
     def interact(self, action):
@@ -253,6 +262,10 @@ class Game:
         if self.board[x][y].has_wumpus:
             self.board[x][y].has_wumpus = False
             self.sensors['scream'] = True
+            self.last_sensor = 'scream'
+
+            # Increase score by 1000
+            self.player.set_score(self.player.get_score() + 1000)
 
             # Remove the stench from the surrounding cells
             for i in range(x - 1, x + 2):
@@ -294,7 +307,7 @@ class Game:
         sensors = [self.sensors['breeze'], self.sensors['stench'], self.sensors['glitter'], self.sensors['bump'],
                    self.sensors['scream']]
 
-        return self.player.score, sensors
+        return self.player.score, sensors, self.player.get_x(), self.player.get_y(), self.player.has_gold, self.player.has_arrow, self.last_sensor, self.player.dangerMatrix
 
     def is_game_over(self):
         return self.game_over
@@ -327,7 +340,7 @@ class Game:
                 self.print_score()
 
             # Restrict to a certain number of moves using player's get_num_moves()
-            if self.player.get_num_moves() >= 30:
+            if self.player.get_num_moves() >= 100:
                 self.game_over = True
                 self.won = False
 
