@@ -35,10 +35,10 @@ def run_neat(config_file):
             # It's good to have a fitness function that is always positive
             # and increases as the score increases
 
-            genome.fitness = score
+            genome.fitness = game.get_fitness()
 
     # Run the NEAT evolution process
-    winner = population.run(eval_genomes, 300)
+    winner = population.run(eval_genomes, 200)
 
     # Save the winning genome
     with open('winner_genome.pkl', 'wb') as output:

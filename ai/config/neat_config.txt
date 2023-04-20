@@ -19,7 +19,7 @@ species_elitism = 2
 [DefaultGenome]
 # node activation options
 activation_default = sigmoid
-activation_mutate_rate = 0.1
+activation_mutate_rate = 0.2
 activation_options = sigmoid
 
 # node aggregation options
@@ -50,7 +50,7 @@ enabled_default = True
 enabled_mutate_rate = 0.01
 
 # feedforward option
-feed_forward = True
+feed_forward = False
 
 # node add/remove rates
 node_add_prob = 0.2

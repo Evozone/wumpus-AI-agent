@@ -140,6 +140,10 @@ class Game:
 
     # Update game state using the action
     def update_game_state(self, action):
+        if (self.board[self.player.get_x()][self.player.get_y()].has_visited == False):
+            self.board[self.player.get_x()][self.player.get_y()
+                                            ].has_visited = True
+            self.player.set_score(self.player.get_score() + 100)
 
         # Check current cell for wumpus and pit and update player danger matrix
         if self.board[self.player.get_x()][self.player.get_y()].has_breeze:
@@ -171,7 +175,7 @@ class Game:
         # If the player is dead, the game is over
         if not self.player.get_alive():
             # Decrease score by 1000
-            self.player.set_score(self.player.get_score() - 10000)
+            self.player.set_score(self.player.get_score() - 1000)
             self.game_over = True
             return
 
@@ -254,7 +258,7 @@ class Game:
                 self.shoot_arrow(action[1:])
             else:
                 # print("You don't have an arrow!")
-                self.player.set_score(self.player.get_score() - 500)
+                self.player.set_score(self.player.get_score() - 100)
 
     # Kill wumpus and remove stench
     def kill_wumpus(self, x, y):
@@ -300,6 +304,23 @@ class Game:
 
     # Functions for the AI agent
     def get_fitness(self):
+        fitness = self.player.score
+        # if player has gold but get_alive is false, then add 2000 to score:
+        if self.player.has_gold and not self.player.get_alive():
+            fitness += 2000
+        if not self.player.alive and self.player.get_num_moves() < 2:
+            fitness -= 1000
+        if not self.player.alive and self.player.get_num_moves() > 15:
+            fitness += 800
+        if not self.player.alive and not self.player.has_arrow:
+            fitness += 800
+        count = 0
+        for i in range(self.size):
+            for j in range(self.size):
+                if self.board[i][j].has_visited:
+                    count = count+1
+        if count < 4:
+            fitness -= 300
         return self.player.score
 
     def get_state(self):
@@ -349,7 +370,7 @@ class Game:
                 self.print_sensors()
 
                 # Sleep for 0.1 seconds
-                time.sleep(0.1)
+                time.sleep(2)
 
                 # Clear the screen
                 os.system('cls' if os.name == 'nt' else 'clear')

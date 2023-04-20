@@ -10,5 +10,5 @@ if __name__ == "__main__":
     winner_genome_path = os.path.join(
         local_dir, "winner_genome.pkl")
 
-    run_neat(config_path)
-    # run_game_with_trained_ai(winner_genome_path, config_path)
+    # run_neat(config_path)
+    run_game_with_trained_ai(winner_genome_path, config_path)
