@@ -1,6 +1,6 @@
 import os
-import game
-import instructions
+from game import game as WumpusWorld
+from game import instructions
 
 
 # Get user input
@@ -16,7 +16,7 @@ def getUserInput():
 
 
 # Main function
-if __name__ == "__main__":
+def run_game_with_human():
     # Tell Instructions
     instructions.display_instructions()
 
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     os.system("cls" if os.name == "nt" else "clear")
 
     # Create a new game and start it
-    game = game.Game()
+    game = WumpusWorld.Game()
     game.start_game()
 
     while not game.game_over:

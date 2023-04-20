@@ -1,5 +1,6 @@
 # Imports
 import os
+import time
 import game.cell as cell
 import random
 import game.player as player
@@ -22,6 +23,7 @@ class Game:
         self.game_over = False
         self.won = False
         self.size = 4
+        self.was_last_sensor_bump = False
 
     # Create the 4x4 game board
     def create_board(self):
@@ -39,8 +41,8 @@ class Game:
         x = random.randint(0, 3)
         y = random.randint(0, 3)
 
-        # If the wumpus is placed in the starting cell, move it to a random cell
-        while x == 0 and y == 0:
+        # If the wumpus is placed in the starting cell, or 0, 1 or 1, 0, move it to a random cell
+        while (x == 0 and y == 0) or (x == 0 and y == 1) or (x == 1 and y == 0):
             x = random.randint(0, 3)
             y = random.randint(0, 3)
 
@@ -57,7 +59,6 @@ class Game:
             self.board[x][y + 1].set_stench(True)
 
     # Set the pit locations
-
     def set_pits(self):
         # Two pits
         for i in range(2):
@@ -65,7 +66,7 @@ class Game:
             y = random.randint(0, 3)
 
             # If the pit is placed in the starting cell or the same cell as another pit, move it to a random cell
-            while (x == 0 and y == 0) or self.board[x][y].get_pit():
+            while (x == 0 and y == 0) or (x == 0 and y == 1) or (x == 1 and y == 0) or self.board[x][y].get_pit():
                 x = random.randint(0, 3)
                 y = random.randint(0, 3)
 
@@ -142,6 +143,7 @@ class Game:
         # Determine if the action is a movement or interaction
         if action in ['w', 'a', 's', 'd']:
             # Sensor for bump is updated inside move_player
+            self.player.set_num_moves(self.player.get_num_moves() + 1)
             self.move_player(action)
 
             # Check if the player is in a cell with a pit or Wumpus
@@ -154,12 +156,13 @@ class Game:
 
         elif action in ['g', 'q', 'xw', 'xa', 'xs', 'xd']:
             # Sensor for scream is updated inside interact
+            self.player.set_num_moves(self.player.get_num_moves() + 1)
             self.interact(action)
 
         # If the player is dead, the game is over
         if not self.player.get_alive():
             # Decrease score by 1000
-            self.player.set_score(self.player.get_score() - 1000)
+            self.player.set_score(self.player.get_score() - 10000)
             self.game_over = True
             return
 
@@ -169,7 +172,7 @@ class Game:
         # If the player is in 0, 0 with the gold, the game is over and the player wins
         if self.player.get_x() == 0 and self.player.get_y() == 0 and self.player.has_gold:
             # Increase score by 1000
-            self.player.set_score(self.player.get_score() + 1000)
+            self.player.set_score(self.player.get_score() + 5000)
             self.game_over = True
             self.won = True
 
@@ -199,12 +202,22 @@ class Game:
 
         # Check if the new position is out of bounds
         if new_x < 0 or new_x >= self.size or new_y < 0 or new_y >= self.size:
+            # decrease score by amount of times bumped
+            if self.was_last_sensor_bump:
+                self.player.set_score(
+                    self.player.get_score() - 1000)
+            else:
+                self.player.set_score(
+                    self.player.get_score() - 50)
             self.sensors['bump'] = True
+            self.was_last_sensor_bump = True
             return
 
         # Move the player and update the sensors
         self.player.set_x(new_x)
         self.player.set_y(new_y)
+
+        self.was_last_sensor_bump = False
 
     # Interact with the environment
     def interact(self, action):
@@ -214,11 +227,11 @@ class Game:
             if self.board[x][y].has_gold:
                 self.board[x][y].has_gold = False
                 self.player.has_gold = True
-                # self.player.set_score(self.player.get_score() + 1000)
+                self.player.set_score(self.player.get_score() + 2000)
                 self.sensors['glitter'] = False
-                # self.game_over = True
             else:
-                self.player.set_score(self.player.get_score() - 500)
+                # No gold to grab: punish the ai
+                self.player.set_score(self.player.get_score() - 100)
 
         elif action == 'q':
             # Quit the game
@@ -252,6 +265,9 @@ class Game:
 
     # Shoot the arrow
     def shoot_arrow(self, arrow_direction):
+        # Decrease score by 10
+        self.player.set_score(self.player.get_score() - 10)
+
         # Get the current position of the player
         x, y = self.player.get_x(), self.player.get_y()
 
@@ -286,7 +302,7 @@ class Game:
     def is_won(self):
         return self.won
 
-    def run_game_with_ai(self, ai_agent):
+    def run_game_with_ai(self, ai_agent, step_by_step=False):
         # Run the game until it is over
         self.set_initial_state()
 
@@ -300,36 +316,43 @@ class Game:
             # Update the game state
             self.update_game_state(action)
 
-            # # Print the board
-            # self.print_board()
+            if step_by_step:
+                # Print the board
+                self.print_board()
 
-            # # Print the action
-            # print('Action: ' + action)
+                # Print the action
+                print('Action: ' + action)
 
-            # # Print the score
-            # self.print_score()
+                # Print the score
+                self.print_score()
 
-            if self.player.score < -1000:
+            # Restrict to a certain number of moves using player's get_num_moves()
+            if self.player.get_num_moves() >= 30:
                 self.game_over = True
+                self.won = False
 
-            # # Print the sensors
-            # self.print_sensors()
+            if step_by_step:
+                # Print the sensors
+                self.print_sensors()
 
-            # # Reset the sensors
+                # Sleep for 0.1 seconds
+                time.sleep(0.1)
+
+                # Clear the screen
+                os.system('cls' if os.name == 'nt' else 'clear')
+
+            # Reset the sensors
             self.reset_sensors()
 
-            # Clear the screen
-            # os.system('cls' if os.name == 'nt' else 'clear')
+        if step_by_step:
+            # Print the final score
+            self.print_score()
 
-        # # Print the final score
-        # self.print_score()
-        # # os.system('cls' if os.name == 'nt' else 'clear')
-
-        # # Print the game over message
-        # if self.won:
-        #     print('You won!')
-        # else:
-        #     print('You lost!')
+            # Print the game over message
+            if self.won:
+                print('You won!')
+            else:
+                print('You lost!')
 
     # Functions for the human player
     def print_score(self):

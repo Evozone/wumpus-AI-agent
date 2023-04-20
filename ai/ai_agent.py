@@ -45,8 +45,8 @@ class MyAgent:
         action_index = output.index(max(output))
 
         # Convert the action index to an action
-        action_map = {0: 's', 1: 'd', 2: 'w', 3: 'a',
-                      4: 'g', 5: 'xs', 6: 'xd', 7: 'xw', 8: 'xa'}
+        action_map = {0: 'g', 1: 'w', 2: 'a', 3: 's', 4: 'd',
+                      5: 'xw', 6: 'xa', 7: 'xs', 8: 'xd'}
 
         action = action_map[action_index]
 

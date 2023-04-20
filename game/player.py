@@ -7,7 +7,8 @@ class Player:
         self.has_arrow = True
         self.has_gold = False
         self.alive = True
-        self.score = 0
+        self.score = 1000
+        self.num_moves = 0
 
     def __repr__(self):
         return f"Player(x={self.x}, y={self.y}, has_arrow={self.has_arrow}, has_gold={self.has_gold}, alive={self.alive}, score={self.score})"
@@ -44,3 +45,9 @@ class Player:
 
     def set_score(self, score):
         self.score = score
+
+    def get_num_moves(self):
+        return self.num_moves
+
+    def set_num_moves(self, num_moves):
+        self.num_moves = num_moves

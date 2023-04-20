@@ -24,7 +24,7 @@ def run_game_with_trained_ai(winner_genome_path, config_file):
 
     # Run the game with the trained AI agent
     game = WuGame.Game()
-    game.run_game_with_ai(agent)
+    game.run_game_with_ai(agent, step_by_step=True)
 
 
 if __name__ == "__main__":

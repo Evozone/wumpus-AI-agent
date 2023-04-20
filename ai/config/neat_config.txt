@@ -1,8 +1,8 @@
 [NEAT]
 fitness_criterion = max
-fitness_threshold = 1
+fitness_threshold = 1000.0
 pop_size = 200
-reset_on_extinction = False
+reset_on_extinction = True
 
 [DefaultSpeciesSet]
 compatibility_threshold = 3.0
@@ -19,12 +19,12 @@ species_elitism = 2
 [DefaultGenome]
 # node activation options
 activation_default = sigmoid
-activation_mutate_rate = 0.0
+activation_mutate_rate = 0.1
 activation_options = sigmoid
 
 # node aggregation options
 aggregation_default = sum
-aggregation_mutate_rate = 0.0
+aggregation_mutate_rate = 0.1
 aggregation_options = sum
 
 # node bias options
