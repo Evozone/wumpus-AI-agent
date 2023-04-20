@@ -147,10 +147,10 @@ class Game:
             # Check if the player is in a cell with a pit or Wumpus
             if self.board[self.player.get_x()][self.player.get_y()].has_pit:
                 self.player.set_alive(False)
-                print("You fell into a pit and died!")
+                # print("You fell into a pit and died!")
             elif self.board[self.player.get_x()][self.player.get_y()].has_wumpus:
                 self.player.set_alive(False)
-                print("You were eaten by the Wumpus!")
+                # print("You were eaten by the Wumpus!")
 
         elif action in ['g', 'q', 'xw', 'xa', 'xs', 'xd']:
             # Sensor for scream is updated inside interact
@@ -214,7 +214,11 @@ class Game:
             if self.board[x][y].has_gold:
                 self.board[x][y].has_gold = False
                 self.player.has_gold = True
+                # self.player.set_score(self.player.get_score() + 1000)
                 self.sensors['glitter'] = False
+                # self.game_over = True
+            else:
+                self.player.set_score(self.player.get_score() - 500)
 
         elif action == 'q':
             # Quit the game
@@ -227,7 +231,8 @@ class Game:
                 self.player.has_arrow = False
                 self.shoot_arrow(action[1:])
             else:
-                print("You don't have an arrow!")
+                # print("You don't have an arrow!")
+                self.player.set_score(self.player.get_score() - 500)
 
     # Kill wumpus and remove stench
     def kill_wumpus(self, x, y):
@@ -304,23 +309,27 @@ class Game:
             # # Print the score
             # self.print_score()
 
+            if self.player.score < -1000:
+                self.game_over = True
+
             # # Print the sensors
             # self.print_sensors()
 
             # # Reset the sensors
-            # self.reset_sensors()
+            self.reset_sensors()
 
-            # # Clear the screen
+            # Clear the screen
             # os.system('cls' if os.name == 'nt' else 'clear')
 
-        # Print the final score
-        self.print_score()
+        # # Print the final score
+        # self.print_score()
+        # # os.system('cls' if os.name == 'nt' else 'clear')
 
-        # Print the game over message
-        if self.won:
-            print('You won!')
-        else:
-            print('You lost!')
+        # # Print the game over message
+        # if self.won:
+        #     print('You won!')
+        # else:
+        #     print('You lost!')
 
     # Functions for the human player
     def print_score(self):

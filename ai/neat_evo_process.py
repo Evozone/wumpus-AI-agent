@@ -31,13 +31,10 @@ def run_neat(config_file):
             # Calculate the fitness based on the game score, for example
             score = game.get_state()[0]
 
-            if score < -1000:
-                genome.fitness = -1e9
-            else:
-                genome.fitness = score
+            genome.fitness = score
 
     # Run the NEAT evolution process
-    winner = population.run(eval_genomes, 10)  # 10 generations
+    winner = population.run(eval_genomes, 100)  # 10 generations
 
     # Save the winning genome
     with open('winner_genome.pkl', 'wb') as output:

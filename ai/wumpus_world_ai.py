@@ -2,8 +2,8 @@ import pickle
 import neat
 import os
 
-from . import ai_agent
-from .. import game as WuGame
+import ai.ai_agent as ai_agent
+import game.game as WuGame
 
 
 def run_game_with_trained_ai(winner_genome_path, config_file):
