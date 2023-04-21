@@ -38,8 +38,11 @@ class Game:
     # Set the wumpus location
     def set_wumpus(self):
         # Wumpus can be placed in any cell except the starting cell
-        x = random.randint(0, 3)
-        y = random.randint(0, 3)
+        # x = random.randint(0, 3)
+        # y = random.randint(0, 3)
+
+        x = 3
+        y = 3
 
         # If the wumpus is placed in the starting cell, or 0, 1 or 1, 0, move it to a random cell
         while (x == 0 and y == 0) or (x == 0 and y == 1) or (x == 1 and y == 0):
@@ -62,8 +65,12 @@ class Game:
     def set_pits(self):
         # Two pits
         for i in range(2):
-            x = random.randint(0, 3)
-            y = random.randint(0, 3)
+            # x = random.randint(0, 3)
+            # y = random.randint(0, 3)
+            if i == 0:
+                x, y = 0, 3
+            else:
+                x, y = 3, 0
 
             # If the pit is placed in the starting cell or the same cell as another pit, move it to a random cell
             while (x == 0 and y == 0) or (x == 0 and y == 1) or (x == 1 and y == 0) or self.board[x][y].get_pit():
@@ -85,8 +92,11 @@ class Game:
     # Set the gold location
     def set_gold(self):
         # Gold can be placed in any cell except the starting cell or pits
-        x = random.randint(0, 3)
-        y = random.randint(0, 3)
+        # x = random.randint(0, 3)
+        # y = random.randint(0, 3)
+
+        x = 1
+        y = 1
 
         # If the gold is placed in the starting cell or a pit, move it to a random cell
         while (x == 0 and y == 0) or self.board[x][y].get_pit():
@@ -305,22 +315,42 @@ class Game:
     # Functions for the AI agent
     def get_fitness(self):
         fitness = self.player.score
-        # if player has gold but get_alive is false, then add 2000 to score:
+        # if player died but still has gold, increase score by 2000 for effort
         if self.player.has_gold and not self.player.get_alive():
             fitness += 2000
+
+        # if player died after only 2 moves, decrease score by 1000
         if not self.player.alive and self.player.get_num_moves() < 2:
             fitness -= 1000
+
+        # if player died but moved a lot, increase score by 800
         if not self.player.alive and self.player.get_num_moves() > 15:
             fitness += 800
-        if not self.player.alive and not self.player.has_arrow:
-            fitness += 800
-        count = 0
-        for i in range(self.size):
-            for j in range(self.size):
-                if self.board[i][j].has_visited:
-                    count = count+1
-        if count < 4:
+
+        # if player died but still has arrow, decrease score by 800
+        if not self.player.alive and self.player.has_arrow:
+            fitness -= 800
+
+        # if player sees gold but doesn't pick it up, decrease score by 500
+        if self.sensors['glitter'] and not self.player.has_gold:
+            fitness -= 500
+
+        # If less than 4 cells have been visited, then decrease score by 300
+        def count_visited_cells():
+            count = 0
+            for i in range(self.size):
+                for j in range(self.size):
+                    if self.board[i][j].has_visited:
+                        count += 1
+            return count
+
+        if count_visited_cells() < 4:
             fitness -= 300
+
+        # Reward player for every move it has gold
+        if self.player.has_gold:
+            fitness += 100 * self.player.get_num_moves()
+
         return self.player.score
 
     def get_state(self):
@@ -369,8 +399,8 @@ class Game:
                 # Print the sensors
                 self.print_sensors()
 
-                # Sleep for 0.1 seconds
-                time.sleep(2)
+                # Sleep for 0.2 seconds
+                time.sleep(0.2)
 
                 # Clear the screen
                 os.system('cls' if os.name == 'nt' else 'clear')

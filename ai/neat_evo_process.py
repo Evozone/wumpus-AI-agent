@@ -38,7 +38,7 @@ def run_neat(config_file):
             genome.fitness = game.get_fitness()
 
     # Run the NEAT evolution process
-    winner = population.run(eval_genomes, 200)
+    winner = population.run(eval_genomes, 1000)
 
     # Save the winning genome
     with open('winner_genome.pkl', 'wb') as output:
