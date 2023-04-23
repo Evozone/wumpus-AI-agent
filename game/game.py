@@ -16,13 +16,12 @@ REWARD_FOR_VISITING_NEW_CELL = 200
 REWARD_FOR_VISITING_OLD_CELL = -50
 
 PUNISHMENT_FOR_DYING = -1000
-PUNISHMENT_FOR_TURNING = -1
+PUNISHMENT_FOR_TURNING = 50
 PUNISHMENT_FOR_BUMPING = -10
-PUNISHMENT_FOR_REDUNDANT_ACTION = -300
+PUNISHMENT_FOR_REDUNDANT_ACTION = -500
+
 
 # Function to generate a random seed
-
-
 def generate_seed():
     seed = []
 
@@ -285,7 +284,7 @@ class Game:
             # If so, set the bump sensor to true and don't move the player
             self.sensors['bump'] = True
 
-            # Punish the ai for bumping into the wall. If the previous sensors contained a bump, punish the ai even more
+            # Punish the neat-ai for bumping into the wall. If the previous sensors contained a bump, punish the neat-ai even more
             if self.previous_sensors['bump']:
                 self.player.set_score(
                     self.player.get_score() + PUNISHMENT_FOR_REDUNDANT_ACTION * 2)
@@ -345,7 +344,7 @@ class Game:
                     self.player.get_score() + REWARD_FOR_GRABBING_GOLD)
                 self.sensors['glitter'] = False
             else:
-                # No gold to grab: punish the ai
+                # No gold to grab: punish the neat-ai
                 self.player.set_score(self.player.get_score(
                 ) + PUNISHMENT_FOR_REDUNDANT_ACTION)
 
@@ -425,11 +424,7 @@ class Game:
 
         # if player died but still has arrow, decrease fitness by 800
         if not self.player.get_alive() and self.player.get_has_arrow():
-            fitness -= 800
-
-        # if player sees gold but doesn't pick it up, decrease fitness by 500
-        if self.sensors['glitter'] and not self.player.get_has_gold():
-            fitness -= 500
+            fitness -= 300
 
         # If less than 5 cells have been visited, then decrease score by 800
         def count_visited_cells():
@@ -441,9 +436,9 @@ class Game:
             return count
 
         if count_visited_cells() < 5:
-            fitness -= 800
-        elif count_visited_cells() > 7:
-            fitness += 500
+            fitness -= 1000
+        elif count_visited_cells() > 5:
+            fitness += 1000
 
         # If player has gold and is close to the exit, increase fitness by a function of the distance to the exit
         if self.player.get_has_gold():
@@ -455,7 +450,7 @@ class Game:
         if self.player.has_gold:
             fitness += 50 * self.player.get_num_moves()
 
-        return (fitness * 100) // self.player.get_num_moves()
+        return fitness
 
     def get_state(self):
         # Convert sensors's dictionary to a list of true/false values

@@ -23,6 +23,12 @@ def run_neat(config_file):
     stats = neat.StatisticsReporter()
     population.add_reporter(stats)
 
+    # Place the checkpoints in the ai/checkpoints directory
+    local_dir = os.path.dirname(__file__)
+    checkpoint_dir = os.path.join(local_dir, "checkpoints")
+    population.add_reporter(Checkpointer(
+        1000, filename_prefix=checkpoint_dir + "/neat-checkpoint-"))
+
     # Define the fitness function
     def eval_genomes(genomes, config):
 
@@ -44,7 +50,7 @@ def run_neat(config_file):
             genome.fitness = game.get_fitness()
 
     # Run the NEAT evolution process
-    winner = population.run(eval_genomes, 200)
+    winner = population.run(eval_genomes, 300)
 
     # Visualize the winning genome
     visualize_genome(winner, config)
@@ -67,5 +73,6 @@ def visualize_genome(genome, config):
 
 if __name__ == "__main__":
     local_dir = os.path.dirname(__file__)
-    config_path = os.path.join(local_dir, "ai", "config", "neat_config.txt")
+    config_path = os.path.join(
+        local_dir, "ai", "config", "neat_config.txt")
     run_neat(config_path)

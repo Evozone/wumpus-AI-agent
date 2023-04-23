@@ -31,5 +31,6 @@ def run_game_with_trained_ai(winner_genome_path, config_file):
 if __name__ == "__main__":
     local_dir = os.path.dirname(__file__)
     winner_genome_path = os.path.join(local_dir, "winner_genome.pkl")
-    config_path = os.path.join(local_dir, "ai", "config", "neat_config.txt")
+    config_path = os.path.join(
+        local_dir, "ai", "config", "neat_config.txt")
     run_game_with_trained_ai(winner_genome_path, config_path)
