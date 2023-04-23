@@ -8,13 +8,13 @@ reset_on_extinction = True
 compatibility_threshold = 3.0
 
 [DefaultReproduction]
-elitism = 2
+elitism = 3
 survival_threshold = 0.2
 
 [DefaultStagnation]
 species_fitness_func = max
-max_stagnation = 15
-species_elitism = 4
+max_stagnation = 30
+species_elitism = 2
 
 [DefaultGenome]
 # node activation options
@@ -57,7 +57,7 @@ node_add_prob = 0.3
 node_delete_prob = 0.3
 
 # network parameters
-num_hidden = 0
+num_hidden = 3
 num_inputs = 11
 num_outputs = 6
 
