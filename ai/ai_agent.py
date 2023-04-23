@@ -28,21 +28,41 @@ class MyAgent:
         return action
 
     def percept_to_inputs(self, game_state, game_over):
-        # Get the game state as a list of inputs
-        score, sensors, playerX, playerY, playerGold, playerArrow, last_sensor, cave = game_state
 
-        # Map last sensor to a number
-        last_sensor_map = {None: 0, 'bump': 1, 'scream': 2}
+        inputs = []
 
-        last_sensor = last_sensor_map[last_sensor]
+        # Add the game over flag
+        inputs.append(float(game_over))
 
-        # Flatten cave (4x4) to a list of 16
-        cave = [c for row in cave for c in row]
+        # Add the player position
+        inputs.append(game_state[5])
+        inputs.append(game_state[6])
 
-        # Inputs are score is a number, sensors are boolean, game_over is boolean
-        # Convert boolean sensors to 0 or 1 and score to float
-        inputs = [float(game_over)] + [float(s)
-                                       for s in sensors] + [float(score)] + [float(playerX)] + [float(playerY)] + [float(playerGold)] + [float(playerArrow)] + [float(last_sensor)] + [float(c) for c in cave]
+        # Add the sensor values
+        inputs.append(game_state[0])
+        inputs.append(game_state[1])
+        inputs.append(game_state[2])
+        inputs.append(game_state[3])
+        inputs.append(game_state[4])
+
+        # Add the player direction
+        # north = 0, east = 1, south = 2, west = 3
+        # game_state[7] is the direction the player is facing in string format
+        if game_state[7] == 'north':
+            inputs.append(0.0)
+        elif game_state[7] == 'east':
+            inputs.append(1.0)
+        elif game_state[7] == 'south':
+            inputs.append(2.0)
+        elif game_state[7] == 'west':
+            inputs.append(3.0)
+
+        # Add the player score
+        inputs.append(float(game_state[8]))
+
+        # Add the number of move
+        inputs.append(float(game_state[9]))
+
         return inputs
 
     def output_to_action(self, output):
@@ -52,8 +72,7 @@ class MyAgent:
         action_index = output.index(max(output))
 
         # Convert the action index to an action
-        action_map = {0: 'g', 1: 'w', 2: 'a', 3: 's', 4: 'd',
-                      5: 'xw', 6: 'xa', 7: 'xs', 8: 'xd'}
+        action_map = {0: 'w', 1: 's', 2: 'a', 3: 'd', 4: 'g', 5: 'x'}
 
         action = action_map[action_index]
 

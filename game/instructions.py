@@ -6,7 +6,7 @@ def display_instructions():
     print('=' * 60)
     print("Instructions:")
     print(
-        "- Use 'w' to move up, 's' to move down, 'a' to move left, and 'd' to move right."
+        "- Use 'a' to turn left, 'd' to turn right, 'w' to move forward, and 's' to move backward."
     )
     print("- Use 'x' to shoot an arrow.")
     print("- Use 'q' to quit the game.")
@@ -31,4 +31,4 @@ def display_instructions():
 
 def display_concise_instructions():
     print('-' * 50)
-    print('w: up | s: down | a: left | d: right | x: shoot | g: grab | q: quit')
+    print('w: move forward | s: move backward | a: turn left | d: turn right | x: shoot arrow | g: grab gold | q: quit')

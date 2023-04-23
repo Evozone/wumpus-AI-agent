@@ -1,4 +1,6 @@
 import neat
+from neat.checkpoint import Checkpointer
+from ai import visualize
 import os
 import pickle
 
@@ -6,6 +8,7 @@ import ai.ai_agent as ai_agent
 import game.game as WuGame
 
 
+# This function is called when the NEAT evolution process is run
 def run_neat(config_file):
     # Load the NEAT configuration
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
@@ -22,14 +25,17 @@ def run_neat(config_file):
 
     # Define the fitness function
     def eval_genomes(genomes, config):
+
+        # Create a game instance for each generation
+        seed = WuGame.generate_seed()
+
         for genome_id, genome in genomes:
             net = neat.nn.FeedForwardNetwork.create(genome, config)
             agent = ai_agent.MyAgent(net)
-            game = WuGame.Game()
-            game.run_game_with_ai(agent)
 
-            # Calculate the fitness based on the game score, for example
-            score = game.get_state()[0]
+            # Run the game with the agent
+            game = WuGame.Game(seed)
+            game.run_game_with_ai(agent)
 
             # Fitness is some function of the score and the number of moves
             # It's good to have a fitness function that is always positive
@@ -38,11 +44,25 @@ def run_neat(config_file):
             genome.fitness = game.get_fitness()
 
     # Run the NEAT evolution process
-    winner = population.run(eval_genomes, 1000)
+    winner = population.run(eval_genomes, 200)
+
+    # Visualize the winning genome
+    visualize_genome(winner, config)
 
     # Save the winning genome
     with open('winner_genome.pkl', 'wb') as output:
         pickle.dump(winner, output, 1)
+
+
+# Function to visualize the network
+def visualize_genome(genome, config):
+
+    # Name the nodes
+    node_names = {-1: 'game_over', -2: 'breeze', -3: 'stench', -4: 'glitter', -5: 'bump', -6: 'scream', -7: 'x', -8: 'y', -9: 'direction', -10: 'score', -11: 'num_moves',
+                  0: 'move_forward', 1: 'move_backward', 2: 'turn_left', 3: 'turn_right', 4: 'grab', 5: 'shoot'}
+
+    visualize.draw_net(config, genome, view=True,
+                       filename="neural_network.png", node_names=node_names)
 
 
 if __name__ == "__main__":

@@ -23,7 +23,8 @@ def run_game_with_trained_ai(winner_genome_path, config_file):
     agent = ai_agent.MyAgent(net)
 
     # Run the game with the trained AI agent
-    game = WuGame.Game()
+    seed = WuGame.generate_seed()
+    game = WuGame.Game(seed)
     game.run_game_with_ai(agent, step_by_step=True)
 
 

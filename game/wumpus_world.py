@@ -8,7 +8,7 @@ def getUserInput():
     while True:
         try:
             action = input("Enter your move: ")
-            if action not in ["w", "a", "s", "d", "xw", "xa", "xs", "xd", "q", "g"]:
+            if action not in ["w", "a", "s", "d", "x", "q", "g"]:
                 raise ValueError
             return action
         except ValueError:
@@ -26,14 +26,15 @@ def run_game_with_human():
     os.system("cls" if os.name == "nt" else "clear")
 
     # Create a new game and start it
-    game = WumpusWorld.Game()
+    seed = WumpusWorld.generate_seed()
+    game = WumpusWorld.Game(seed)
     game.start_game()
 
     while not game.game_over:
 
         action = getUserInput()
 
-        game.update_game_state(action)
+        game.update_game_state(action, step_by_step=True)
 
         os.system("cls" if os.name == "nt" else "clear")
 
@@ -41,11 +42,11 @@ def run_game_with_human():
 
     # If game over, won or lost?
     if game.game_over:
-        if game.won:
+        if game.game_won:
             print("Congratulations! You took the gold and escaped the cave alive!")
             print('-' * 50)
         else:
-            print("You died! Better luck next time!")
+            print("Use a better strategy next time. You died!")
             print('-' * 50)
 
         # Press enter to exit the game
