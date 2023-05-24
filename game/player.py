@@ -1,5 +1,4 @@
-# Crete a class for Player and put the move function in it
-
+# Crete a class for Player
 class Player:
     def __init__(self, x, y):
         self.x = x

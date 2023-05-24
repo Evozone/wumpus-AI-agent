@@ -542,9 +542,6 @@ class Game:
             # Print the board
             self.print_board()
 
-            # Print the action
-            print('Action: ' + action)
-
             # Print the final score
             self.print_score()
 
@@ -605,6 +602,7 @@ class Game:
 
 if __name__ == '__main__':
     print('game.py test')
-    game = Game()
+    seed = generate_seed()
+    game = Game(seed)
 
     game.get_state()

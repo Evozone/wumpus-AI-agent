@@ -3,7 +3,6 @@
 import random
 import game as WuGame
 
-
 class MyAgent:
 
     def __init__(self, net):

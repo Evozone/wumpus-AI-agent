@@ -1,12 +1,14 @@
 import neat
 from neat.checkpoint import Checkpointer
-from ai import visualize
+# from ai import visualize
 import os
 import pickle
 
 import ai.ai_agent as ai_agent
 import game.game as WuGame
 
+# Number of generations to run the NEAT evolution process
+GENERATIONS = 300
 
 # This function is called when the NEAT evolution process is run
 def run_neat(config_file):
@@ -22,12 +24,6 @@ def run_neat(config_file):
     population.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     population.add_reporter(stats)
-
-    # Place the checkpoints in the ai/checkpoints directory
-    local_dir = os.path.dirname(__file__)
-    checkpoint_dir = os.path.join(local_dir, "checkpoints")
-    population.add_reporter(Checkpointer(
-        1000, filename_prefix=checkpoint_dir + "/neat-checkpoint-"))
 
     # Define the fitness function
     def eval_genomes(genomes, config):
@@ -50,10 +46,10 @@ def run_neat(config_file):
             genome.fitness = game.get_fitness()
 
     # Run the NEAT evolution process
-    winner = population.run(eval_genomes, 300)
+    winner = population.run(eval_genomes, GENERATIONS)
 
     # Visualize the winning genome
-    visualize_genome(winner, config)
+    # visualize_genome(winner, config)
 
     # Save the winning genome
     with open('winner_genome.pkl', 'wb') as output:
@@ -61,14 +57,14 @@ def run_neat(config_file):
 
 
 # Function to visualize the network
-def visualize_genome(genome, config):
+# def visualize_genome(genome, config):
 
-    # Name the nodes
-    node_names = {-1: 'game_over', -2: 'breeze', -3: 'stench', -4: 'glitter', -5: 'bump', -6: 'scream', -7: 'x', -8: 'y', -9: 'direction', -10: 'score', -11: 'num_moves',
-                  0: 'move_forward', 1: 'move_backward', 2: 'turn_left', 3: 'turn_right', 4: 'grab', 5: 'shoot'}
+#     # Name the nodes
+#     node_names = {-1: 'game_over', -2: 'breeze', -3: 'stench', -4: 'glitter', -5: 'bump', -6: 'scream', -7: 'x', -8: 'y', -9: 'direction', -10: 'score', -11: 'num_moves',
+#                   0: 'move_forward', 1: 'move_backward', 2: 'turn_left', 3: 'turn_right', 4: 'grab', 5: 'shoot'}
 
-    visualize.draw_net(config, genome, view=True,
-                       filename="neural_network.png", node_names=node_names)
+#     visualize.draw_net(config, genome, view=True,
+#                        filename="neural_network.png", node_names=node_names)
 
 
 if __name__ == "__main__":
