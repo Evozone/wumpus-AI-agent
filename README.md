@@ -1,11 +1,11 @@
-# Wumpus AI Agent
+# 👻 Wumpus AI Agent
+
+This is a Wumpus World game with an AI agent that plays it. The game is based on the classic Wumpus World game, where the player navigates a maze-like cave system to find gold while avoiding deadly pits and the Wumpus monster.
 
 <details>
   <summary>Table of Contents</summary> 
 
-  This is a Wumpus World game with an AI agent that plays it. The game is based on the classic Wumpus World game, where the player navigates a maze-like cave system to find gold while avoiding deadly pits and the Wumpus monster.
-
-- [Wumpus AI Agent](#wumpus-ai-agent)
+- [👻 Wumpus AI Agent](#-wumpus-ai-agent)
   - [Specifications](#specifications)
   - [Installation](#installation)
   - [Usage](#usage)
@@ -23,10 +23,13 @@
 - Currently only a CLI version is available, but a GUI version is planned for the future.
 
 ## Installation
+
+You will need Python 3.7 or higher to run this project. You can download Python [here](https://www.python.org/downloads/).
+
 To install the game, follow these steps:
 1. Fork the repository
-2. Clone the repository: `git clone https://github.com/your-username/wumpus_AI_agent.git`
-3. Navigate to the project directory: `cd wumpus_AI_agent`
+2. Clone the repository: `git clone https://github.com/your-username/wumpus-AI-agent.git`
+3. Navigate to the project directory: `cd wumpus-AI-agent`
 4. Install the dependencies: `pip install -r requirements.txt`
 
 To learn more about forking and cloning repositories, see [this article](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) on GitHub.
